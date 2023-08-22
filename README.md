@@ -1,5 +1,11 @@
+### About
+This repository maintains codes to deploy a tracking system for the Peconic Estuary Partnership (PEP)'s 2020 Comprehensive Conservation Management Plan (CCMP). The tracking system customizes the Drual content management system and dynamically integrated with data on Google Sheet containing the CCMP updates. 
+
+### Acknowledgement
+This system was developed by the Geospatial Center in the School of Marine and Atmospheric Sciences at Stony Brook University. The stuent developers are Junho Lee and Jerry Kang under the guidance of Dr. Sung-Gheel Jang with the support of the Peconic Estuary Partnership. 
+
 # Getting started
-## A] Drupal
+## Drupal
 
 ### 1) Install Docker
 Docker needs to be installed to run Drupal. If docker is already installed, skip to step 2. <br>
@@ -31,7 +37,7 @@ Get project with git clone and use 2 .env_template in PEP-CCMP and PEP-CCMP/drup
 Starting up will take a few seconds. Eventually, connect to set URL in .env for Drupal. <br>
 Note: on starting up, if there are no drupal-data folder, manually make a new folder and start again
 
-## B] Deleting Drupal
+## Deleting Drupal
 To do a complete reset of Drupal, use commands:
 
     sudo chmod o+w drupal-data

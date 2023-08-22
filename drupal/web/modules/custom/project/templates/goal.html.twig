@@ -1,0 +1,138 @@
+{{ attach_library('project/goal') }}
+
+<div class="container">
+  <div class="row g-2">
+    <div class="col-4 text-center">
+        <div class="p-3 border bg-light">
+            <!-- List goals -->
+            <h4 class="montserrat">Goals</h4> 
+
+            <!-- Make goals clickable -->
+            <div class="d-flex justify-content-evenly">
+            {% for goal in goalList.goals %}
+                <div class="p-2 flex-fill bd-highlight zoom bg-{{ goal.code }} bd-{{ goal.code }}{% if goalTheme == goal.code %}-chosen {% endif %}" 
+                    style="padding: 0rem !important; margin-right: 3px; margin-left: 3px; border-style: solid; border-width: 5px;">
+                    <a href={{ goal.href }} style="width: 100%; height: auto;" data-bs-toggle="tooltip" data-bs-title="{{ goal.alt }}"> 
+                        <center style="padding-top: 5px; padding-bottom: 5px;">
+                        <img src={{ goal.src }} alt="Goal: {{ goal.alt }}" style="width: 70%; height: auto;"> 
+                        </center>
+                    </a>
+                </div>
+            {% endfor %}
+            </div>
+        </div>
+        <br>
+
+        <div class="p-3 bg-light box-{{ goalTheme }} txt-{{ goalTheme }}">
+            <!-- Display key facts about goal -->
+            <h5 class="montserrat">Goal {{ goal.id }}: {{ goal.title }}</h5>
+            <div class="row g-2">
+                <div class="col-6 d-flex justify-content-evenly">
+                    <div class="box-{{ goalTheme }}">
+                        <small class="num">{{ numActions }}</small> <br>
+                        <small style="font-size: 18px">Actions</small>
+                    </div>
+                </div>
+                <div class="col-6 d-flex justify-content-evenly">
+                    <div class="box-{{ goalTheme }}">
+                        <small class="num">{{ numProjects }}</small> <br>
+                        <small style="font-size: 18px">Projects</small>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+        <br>
+
+        <div class="p-3 border bg-light">
+            <!-- View chart -->
+            <div class="row g-2">
+                <div class="col-6 d-flex">
+                    <h5 class="montserrat">Progress of Actions</h5>
+                </div>
+                <div class="col-6 d-flex">
+                    <h5 class="montserrat">Progress of Projects</h5>
+                </div>
+            </div>
+            <div class="row g-2">
+                <div class="col-6 d-flex justify-content-evenly">
+                    <div>
+                        <canvas id="goalChart{{ goalTheme }}"></canvas> {# Set id as objChart-{{ objective.id }}-action #}
+                    </div>
+                </div>
+                <div class="col-6 d-flex justify-content-evenly">
+                    <div>
+                        <canvas id="goalChart{{ goalTheme }}B"></canvas> {# Set id as objChart-{{ objective.id }}-project #}
+                    </div>   
+                </div>
+            </div>         
+            <br> 
+
+            <!-- Display legend -->
+            <small> <span class="tiny-dot complete"></span> Completed </small> &nbsp;
+            <small> <span class="tiny-dot inprogress"></span> In-Progress </small> &nbsp;
+            <small> <span class="tiny-dot unexecuted"></span> Unexecuted </small>  
+            <br>
+            <small>Updated since: {{ lastUpdated }}</small>
+        </div>
+        <br>
+    </div>
+    <div class="col-8">
+    <!-- section Start [objectives] -->
+    {% for obj in goal.objectives %}
+        <div class="p-3 bg-light text-ceter box-{{ goalTheme }} txt-{{ goalTheme }}">
+            <h5 class="indent montserrat"> Objective {{ obj.description }}</h5>
+        </div>
+        <br>
+
+        <div class="p-3 border bg-light">
+            <!-- accordion Start [actions] -->
+            <div class="accordion" style="accordion-color:red;" id="accordion-obj-{{ obj.id }}">
+            {% for act in obj.actions %}
+                <div class="accordion-item"> 
+                    <h2 class="accordion-header" id="heading-act-{{ act.id }}">
+                        <button class="accordion-button collapsed" data-bs-target="#collapse-act-{{ act.id }}" aria-controls="collapse-act-{{ act.id }}" type="button" data-bs-toggle="collapse" aria-expanded="false">
+                            <div class="d-flex">
+                                <div class="p-2">
+                                    <span class="dot {{ act.status }}"> </span>
+                                </div>
+                                <div class="p-2">
+                                    Action {{ act.title }}
+                                </div>
+                            </div>
+                        </button>
+                    </h2>
+                    <div class="accordion-collapse collapse" id="collapse-act-{{ act.id }}" data-bs-parent="#accordion-obj-{{ obj.id }}"  aria-labelledby="heading-act-{{ act.id }}">
+                        <div class="accordion-body">
+                        {% for me in act.measures %}
+                            <div class="d-flex indent">
+                                <div class="p-2">
+                                    <span class="small-square {{ me.status }}"> </span>
+                                </div>
+                                <div class="p-2">
+                                    <p>{{ me.title }}</p>
+                                </div>
+                            </div>
+                        {% endfor %}
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+            </div>
+            <!-- accordion End -->
+            <br>
+            <div class="text-center">
+                <a href = "/goal/{{ goalTheme }}/obj/{{ obj.id }}">Explore further into Objective {{ obj.id }}</a>                        
+            </div>
+        </div>
+        <br>
+    {% endfor %}
+    <!-- section End-->
+    </div>    
+  </div>
+</div>
+<br>
+
+{# Import scripts #}
+<script src="https://cdn.jsdelivr.net/npm/feather-icons@4.28.0/dist/feather.min.js" integrity="sha384-uO3SXW5IuS1ZpFPKugNNWqTZRRglnUJK6UAZ/gxOX80nxEkN9NcGZTftn6RzhGWE" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.4/dist/Chart.min.js" integrity="sha384-zNy6FEbO50N+Cg5wap8IKA4M/ZnLJgzc6w2NqACZaK0u0FXfOWRRJOnQtpZun8ha" crossorigin="anonymous"></script>

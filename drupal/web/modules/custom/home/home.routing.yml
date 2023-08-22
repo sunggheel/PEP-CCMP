@@ -1,0 +1,11 @@
+# 1] Routing reads:
+# - path and uses named controller & function
+
+home.view:  
+  path: '/home'
+  defaults:
+    # Looks for HomeController.php and calls showHome() from Controller directory
+    _controller: '\Drupal\home\Controller\HomeController::showHome'
+    _title:
+  requirements:
+    _permission: 'access content'

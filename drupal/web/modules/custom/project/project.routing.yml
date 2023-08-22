@@ -1,0 +1,14 @@
+# 1] setup dynamic routing 
+project.goal:  
+  path: '/goal/{goal}'
+  defaults:
+    _controller: '\Drupal\project\Controller\ProjectController::showGoal' # 3] Call function in Controller class, 
+  requirements:
+    _permission: 'access content'
+
+project.objective:
+  path: '/goal/{goal}/obj/{obj}'
+  defaults:
+    _controller: '\Drupal\project\Controller\ProjectController::showObjective'
+  requirements:
+    _permission: 'access content'

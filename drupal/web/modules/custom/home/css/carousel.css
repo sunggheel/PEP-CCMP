@@ -1,0 +1,30 @@
+/* .carousel-title {
+    font-size: 40px;
+}
+
+.carousel-subtitle {
+    font-size: 18px;
+}
+
+#carouselCaptions {
+    max-width:auto; 
+    max-height:550px;
+}
+
+.carousel-indicators, .carousel-inner{
+    max-width:auto; 
+    max-height:550px;
+}
+
+.carousel-item img {
+    object-fit: cover;
+    object-position: center;
+    height: 50vh;
+    overflow: hidden;
+} */
+
+.carousel-images{
+    max-width:auto; 
+    max-height:550px; 
+    min-height: 400px;
+}

@@ -1,0 +1,8 @@
+name: PEP Project Tracking
+description: 'Allows user to see a summary of progress made'
+package: PEP CCMP
+
+type: module
+core_version_requirement: ^8 || ^9
+
+php: 8.1

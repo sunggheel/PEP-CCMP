@@ -1,0 +1,17 @@
+/themes/custom/bootstrap5/templates/layout/html.html.twig
+To access:
+- imported CSS/JS
+
+/themes/custom/bootstrap5/templates/layout/page.html.twig
+To access:
+- Navbar
+- Footer
+
+/themes/custom/bootstrap5/templates/block/block--system-branding-block.html.twig
+To access:
+- Logo
+- Title
+
+/themes/custom/bootstrap5/templates/navigation/breadcrumb.html.twig
+To access:
+- Breadcrumb

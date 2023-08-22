@@ -1,0 +1,76 @@
+<br>
+{%
+    set classes = [
+    'block',
+    'block-' ~ configuration.provider|clean_class,
+    'block-bootstrap-simple-carousel',
+]
+%}
+<div{{ attributes.addClass(classes) }}>
+    {{ title_prefix }}
+    {% if label %}
+        <h2{{ title_attributes.addClass('visually-hidden') }}>{{ label }}</h2>
+    {% endif %}
+    {{ title_suffix }}
+    {% block content %}
+        <div
+            id="carousel-block-generic"
+            class="container-lg carousel slide"
+            data-bs-ride="false"
+            data-wrap="{% if settings.get('wrap') == 1  %}true{% else %}false{% endif %}"
+            data-interval="{{ settings.get('interval') }}"
+            data-pause="{% if settings.get('pause')  %}hover{% endif %}"
+        >
+            <!-- Indicators -->
+            {% if settings.get('indicators')  %}
+            <div class="carousel-indicators">
+                {% for item in items %}
+                    <button 
+                        type="button" 
+                        data-bs-target="#carousel-block-generic" 
+                        data-bs-slide-to={{ loop.index0 }} 
+                        aria-label={{ loop.index0 }}
+                        {% if loop.index0 == 0 %} class="active" aria-current="true" {% endif %}>
+                    </button>
+                {% endfor %}
+                </div>
+            {% endif %}
+
+            <!-- Wrapper for slides -->
+            <div class="carousel-inner">
+                {% for item in items %}
+                    <div class="carousel-item {% if loop.index0 == 0 %} active {% endif %}">
+                        {% if item.image_link is not empty %}
+                            <a href="{{ item.image_link }}">
+                        {% endif %}
+                        <img
+                            src="{{ item.image_url }}"
+                            class="d-block w-100 carousel-images" 
+                            alt="{{ item.image_alt }}"
+                            title="{{ item.image_title }}"
+                        >
+                        {% if item.image_link is not empty %}
+                            </a>
+                        {% endif %}
+                        <div class="carousel-caption">
+                            {% if item.caption_title  %}<h3> {{ item.caption_title }} </h3>{% endif %}
+                            {% if item.caption_text  %}<p> {{ item.caption_text }} </p>{% endif %}
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+
+            <!-- Controls -->
+            {% if settings.get('controls')  %}
+                <button class="carousel-control-prev btn-lg" type="button" data-bs-target="#carousel-block-generic" data-bs-slide="prev">
+                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Previous</span>
+                </button>
+                <button class="carousel-control-next btn-lg" type="button" data-bs-target="#carousel-block-generic" data-bs-slide="next">
+                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Next</span>
+                </button>
+            {% endif %}
+        </div>
+    {% endblock %}
+</div>

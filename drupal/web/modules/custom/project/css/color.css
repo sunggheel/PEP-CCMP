@@ -1,0 +1,88 @@
+/* [bg] background color */
+.bg-strongpartnerships {    /* strong-partnerships */
+    background-color: #ed7a23;
+}
+.bg-resilientcommunities {  /* resilient-communities */
+    background-color: #1f9f8a;
+}
+.bg-cleanwaters {           /* clean-waters */
+    background-color: #2e77b0;
+}
+.bg-healthyecosystem {      /* healthy-ecosystem */
+    background-color: #7dbf72;
+}
+
+/* [txt] text color */
+.txt-strongpartnerships {
+    color: #ed7a23 !important;
+}
+.txt-resilientcommunities {
+    color: #1f9f8a !important;
+}
+.txt-cleanwaters {
+    color: #2e77b0 !important;
+}
+.txt-healthyecosystem {
+    color: #7dbf72 !important;
+}
+.txt-white {
+    color: #f0f0f0 !important;
+}
+
+/* [bd] border color */
+.bd-strongpartnerships {      
+    border-color: #ed7a23 !important;
+}
+.bd-resilientcommunities {   
+    border-color: #1f9f8a !important;
+}
+.bd-cleanwaters {        
+    border-color: #2e77b0 !important;
+}
+.bd-healthyecosystem {      
+    border-color: #7dbf72 !important;
+}
+.bd-white {      
+    border-color: #f0f0f0 !important;
+}
+
+/* Specifically for goal navbar */
+/* [bd-_-chosen] border color */
+.bd-strongpartnerships-chosen {       
+    border-color: #BD5A0F;
+}
+.bd-resilientcommunities-chosen {    
+    border-color: #27CAAF;
+}
+.bd-cleanwaters-chosen {        
+    border-color: #5A9FD4;
+}
+.bd-healthyecosystem-chosen {      
+    border-color: #4D9142;
+}
+
+/* [box] box color (does more than border) */
+.box-strongpartnerships {
+    border: 2px solid #ed7a23;
+    text-align: center;
+    display: block;
+    width: 100%;
+}
+.box-resilientcommunities {
+    border: 2px solid #1f9f8a;
+    text-align: center;
+    display: block;
+    width: 100%;
+}
+.box-cleanwaters {
+    border: 2px solid #2e77b0;
+    text-align: center;
+    display: block;
+    width: 100%;
+}
+.box-healthyecosystem {
+    border: 2px solid #7dbf72;
+    text-align: center;
+    display: block;
+    width: 100%;
+}

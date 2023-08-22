@@ -1,0 +1,23 @@
+<?php
+
+/*
+3] Module:
+- initializes variables
+- passes them to Controller
+*/
+
+/**
+ * Implementing hook_theme().
+ */
+function home_theme($existing, $type, $theme, $path) {
+
+  return [
+    'home_view' => [  
+      'variables' => [  
+        'carousel' => [],
+        'goalsList' => [],
+        'cards' => [],        
+      ]
+    ]
+  ];
+}

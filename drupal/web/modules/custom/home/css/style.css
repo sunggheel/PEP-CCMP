@@ -1,0 +1,9 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@600&display=swap');
+.montserrat {
+    font-family: 'Montserrat', sans-serif;
+}
+
+.hide {
+    display: none;
+    text-decoration: none;
+}

@@ -1,0 +1,50 @@
+/* status color */
+.unexecuted {
+    background-color: #dc3545;
+}
+.inprogress {
+    background-color: #ffc107;
+}
+.complete {
+    background-color: #198754;
+}
+.ongoing {
+    background-color: #808080;
+}
+
+/* Square */
+.square {
+    height: 20px;
+    width: 20px;
+    display: inline-block;
+    border-radius: 5px;
+}
+
+.small-square {
+    height: 15px;
+    width: 15px;
+    display: inline-block;
+    border-radius: 5px;
+}
+
+/* Circle */
+.dot {
+    height: 25px;
+    width: 25px;
+    border-radius: 50%;
+    display: inline-block;
+}
+
+.small-dot {
+    height: 15px;
+    width: 15px;
+    border-radius: 50%;
+    display: inline-block;
+}
+
+.tiny-dot {
+    height: 10px;
+    width: 10px;
+    border-radius: 50%;
+    display: inline-block;
+}

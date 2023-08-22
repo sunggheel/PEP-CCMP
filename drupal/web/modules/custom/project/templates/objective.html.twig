@@ -1,0 +1,321 @@
+{{ attach_library('project/objective') }}
+
+<div class="container">
+    <div class="row g-2">
+        <div class="col-4 text-center">
+            <div class="p-3 border bg-light">
+                <!-- List goals -->
+                <h4 class="montserrat">Goals</h4> 
+
+                <!-- Make goals clickable -->
+                <div class="d-flex justify-content-evenly">
+                {% for goal in goalList.goals %}
+                    <div class="p-2 flex-fill bd-highlight zoom bg-{{ goal.code }} bd-{{ goal.code }}{% if goalTheme == goal.code %}-chosen {% endif %}" 
+                        style="padding: 0rem !important; margin-right: 3px; margin-left: 3px; border-style: solid; border-width: 5px;">
+                        <a href={{ goal.href }} style="width: 100%; height: auto;" data-bs-toggle="tooltip" data-bs-title="{{ goal.alt }}"> 
+                            <center style="padding-top: 5px; padding-bottom: 5px;">
+                            <img src={{ goal.src }} alt="Goal: {{ goal.alt }}" style="width: 70%; height: auto;"> 
+                            </center>
+                        </a>
+                    </div>
+                {% endfor %}
+                </div>
+            </div>
+            <br>
+
+            <div class="p-3 bg-light box-{{ goalTheme }} txt-{{ goalTheme }}">
+
+                <!-- Display objective name -->
+                <h5 class="montserrat">Goal {{ goal.id }}: {{ goal.title }}</h5>
+                <h5 class="montserrat">Objective {{ objective.id }}</h5>
+                <div class="row g-2">
+                    <div class="col-6 d-flex justify-content-evenly">
+                        <div class="box-{{ goalTheme }}">
+                            <small class="num">{{ numActions }}</small> <br>
+                            <small style="font-size: 18px">Actions</small>
+                        </div>
+                    </div>
+                    <div class="col-6 d-flex justify-content-evenly">
+                        <div class="box-{{ goalTheme }}">
+                            <small class="num">{{ numProjects }}</small> <br>
+                            <small style="font-size: 18px">Projects</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <br>
+
+            <div class="p-3 border bg-light">
+                <!-- View chart -->
+                <div class="row g-2">
+                    <div class="col-6 d-flex">
+                        <h5 class="montserrat">Progress of Actions</h5>
+                    </div>
+                    <div class="col-6 d-flex">
+                        <h5 class="montserrat">Progress of Projects</h5>
+                    </div>
+                </div>
+                <div class="row g-2">
+                    <div class="col-6 d-flex justify-content-evenly">
+                        <div>
+                            <canvas id="objChart{{ objective.id }}"></canvas> {# Set id as objChart-{{ objective.id }}-action #}
+                        </div>
+                    </div>
+                    <div class="col-6 d-flex justify-content-evenly">
+                        <div>
+                            <canvas id="objChart{{ objective.id }}B"></canvas> {# Set id as objChart-{{ objective.id }}-project #}
+                        </div>   
+                    </div>
+                </div>         
+                <br> 
+                
+                <!-- Display legend -->
+                <small> <span class="dot complete" style="height: 10px; width: 10px;"></span> Completed </small> &nbsp;
+                <small> <span class="dot inprogress" style="height: 10px; width: 10px;"></span> In-Progress </small> &nbsp;
+                <small> <span class="dot unexecuted" style="height: 10px; width: 10px;"></span> Unexecuted </small>           
+                <br>
+                <small>Updated since: {{ lastUpdated }}</small>
+            </div>
+            <br>
+        </div>
+        <div class="col-8">
+            <div class="p-3 bg-light box-{{ goalTheme }} txt-{{ goalTheme }}">
+                <h5 class="indent montserrat"> Objective {{ objective.description }}</h5>
+            </div>
+            <br>
+
+            <div class="p-3 border bg-light">
+                <!-- Make actions collapsable [actions] -->
+                <div class="accordion" id="accordionActions">
+                {% for act in objective.actions %}
+                    <div class="accordion-item">
+                        <!-- Action title -->
+                        <h2 class="accordion-header" id="heading-{{ act.id }}">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-{{ act.id }}" aria-expanded="false" aria-controls="collapse-{{ act.id }}">
+                                <div class="d-flex">
+                                    <div class="p-2">
+                                        <span class="dot {{ act.status }}"> </span>
+                                    </div>
+                                    <div class="p-2">
+                                        Action {{ act.title }}
+                                    </div>
+                                </div>
+                            </button>
+                        </h2>
+                        <!-- Action content -->
+                        <div id="collapse-{{ act.id }}" class="accordion-collapse collapse" aria-labelledby="heading-{{ act.id }}" data-bs-parent="#accordionActions">
+                            <div class="p-3 border">
+                                <!-- Action nvaigation button -->
+                                <ul class="nav nav-tabs" id="tabAct" role="tablist">
+                                    <li class="nav-item" role="presentation">
+                                        <button class="nav-link active" id="measures-ta-act-{{ act.id }}" data-bs-toggle="tab" data-bs-target="#measures-ta-act-{{ act.id }}-pane" type="button" role="tab" aria-controls="profile-ta-act-{{ act.id }}-pane" aria-selected="false">
+                                            Performance Measures
+                                        </button>
+                                    </li>
+                                    
+                                    {% if act.num_maps > 0 %}
+                                    <li class="nav-item" role="presentation">
+                                        <button class="nav-link" id="maps-ta-act-{{ act.id }}" data-bs-toggle="tab" data-bs-target="#maps-ta-act-{{ act.id }}-pane" type="button" role="tab" aria-controls="profile-ta-act-{{ action.id }}-pane" aria-selected="false">
+                                            {{act.num_maps}} Map(s)
+                                        </button>
+                                    </li>
+                                    {% endif %}
+                                    
+                                    {% if act.num_graphs > 0 %}
+                                    <li class="nav-item" role="presentation">
+                                        <button class="nav-link" id="graphs-ta-act-{{ act.id }}" data-bs-toggle="tab" data-bs-target="#graphs-ta-act-{{ act.id }}-pane" type="button" role="tab" aria-controls="profile-ta-act-{{ action.id }}-pane" aria-selected="false">
+                                            {{act.num_graphs}}  Graph(s)
+                                        </button>
+                                    </li>
+                                    {% endif %}
+                                    
+                                    {% if act.num_links > 0 %}
+                                    <li class="nav-item" role="presentation">
+                                        <button class="nav-link" id="links-ta-act-{{ act.id }}" data-bs-toggle="tab" data-bs-target="#links-ta-act-{{ act.id }}-pane" type="button" role="tab" aria-controls="contact-ta-act-{{ act.id }}-pane" aria-selected="false">
+                                            {{act.num_links}} Related Resource(s)
+                                        </button>
+                                    </li>
+                                    {% endif %}
+                                </ul>
+                                
+                                <!-- Action content -->
+                                <div class="tab-content" id="tabActContent">
+                                    <!-- Measures -->
+                                    <div class="tab-pane fade show active" id="measures-ta-act-{{ act.id }}-pane" role="tabpanel" aria-labelledby="measures-ta-act-{{ act.id }}" tabindex="0">
+                                        <!-- Accordion Start [measures] -->
+                                        <div class="accordion" id="accordion-act-{{ act.id }}">
+                                        {% for me in act.measures %}
+
+                                        <!-- Check if there are sub projects -->
+                                        {% if me.subprojects|length > 0 %}
+                                            <!-- accordion item -->
+                                            <div class="accordion-item">
+                                                <!-- accordion button -->
+                                                <h2 class="accordion-header" id="heading-me-{{ me.id }}">
+                                                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" aria-expanded="false"
+                                                    data-bs-target="#collapse-me-{{ me.id }}" aria-controls="collapse-me-{{ me.id }}">
+                                                        <div class="p-2">
+                                                            <span class="dot {{ me.status }}"> </span>
+                                                        </div>
+                                                        <div class="p-2">
+                                                            {# Status: {{ act.status }} <br> #}
+                                                            {{ me.title }} {% if me.organization != "N/A" %} ({{ me.organization }}) {% endif %}
+                                                        </div>
+                                                    </button>
+                                                </h2>
+
+                                                <!-- accordion content -->
+                                                <div class="accordion-collapse collapse" data-bs-parent="#accordion-act-{{ act.id }}"
+                                                id="collapse-me-{{ me.id }}" aria-labelledby="heading-me-{{ me.id }}">
+                                                    <div class="accordion-body">
+                                                    {% for sub in me.subprojects %}
+                                                        <div class="d-flex indent">
+                                                            <div class="p-2">
+                                                                <span class="small-square {{ sub.status }}"> </span>
+                                                            </div>
+                                                            <div class="p-2">
+                                                                <p>{{ sub.title }} {% if sub.organization %} ({{ sub.organization }}) {% endif %} </p>
+                                                            </div>
+                                                        </div>
+                                                    {% endfor %}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        {% else %}
+                                            <!-- list-group item -->
+                                            <li class="list-group-item">
+                                                <div class="d-flex">
+                                                    <div class="p-2">
+                                                        <span class="dot {{ me.status }}" style = "margin-left: 4px;"> </span>
+                                                    </div>
+                                                    <div class="p-2">
+                                                        {{ me.title }} {% if me.organization != "N/A" %} ({{ me.organization }}) {% endif %}
+                                                    </div>
+                                                </div>
+                                            </li>
+                                        {% endif %}
+                                        {% endfor %}
+                                        </div>
+                                        <!-- Accordion End -->
+                                    </div>
+
+                                    <!-- Map -->
+                                    {% if act.num_maps > 0 %}
+                                    <div class="tab-pane fade" id="maps-ta-act-{{ act.id }}-pane" role="tabpanel" aria-labelledby="maps-ta-act-{{ act.id }}" tabindex="0">
+                                    {% for me in act.measures %}
+                                    {% if me.num_maps > 0 %}
+                                        <!-- list the maps of performance measures -->
+                                        {% for link in me.links_map %}
+                                        <p>{{ link.title }}</p>
+                                        <iframe width="100%" height="520" src="{{ link.url }}" frameBorder="0"></iframe>
+                                        {% endfor %}
+
+                                        <!-- list the maps of sub-projects -->
+                                        {% for sub in me.subprojects %}
+                                        {% if sub.num_maps > 0 %}
+                                            <small>{{ sub.title }}</small><br/>
+                                            {% for link in sub.links_map %}
+                                                <p>{{ link.title }}</p>
+                                                <iframe width="100%" height="520" src="{{ link.url }}" frameBorder="0"></iframe>
+                                            {% endfor %}
+                                            {% if loop.last == false %} <br/> {% endif %}
+                                        {% endif %}
+                                        {% endfor %}
+                                    {% endif %}
+                                    {% endfor %}
+                                    </div>
+                                    {% endif %}
+
+                                    <!-- Graphs -->
+                                    {% if act.num_graphs > 0 %}
+                                    <div class="tab-pane fade" id="graphs-ta-act-{{ act.id }}-pane" role="tabpanel" aria-labelledby="graphs-ta-act-{{ act.id }}" tabindex="0">
+                                    {% for me in act.measures %}
+                                    {% if me.num_graphs > 0 %}
+                                        <!-- list the graphs of performance measures -->
+                                        {% for link in me.links_graph %}
+                                        <p>{{ link.title }}</p>
+                                        <iframe width="100%" height="600" src="{{ link.url }}" frameBorder="0"></iframe>
+                                        {% endfor %}
+                                        <!-- list the graphs of sub-projects -->
+                                        {% for sub in me.subprojects %}
+                                        {% if sub.num_graphs > 0 %}
+                                            <small>{{ sub.title }}</small><br/>
+                                            {% for link in sub.links_graph %}
+                                                <p>{{ link.title }}</p>
+                                                <iframe width="100%" height="600" src="{{ link.url }}" frameBorder="0"></iframe>
+                                            {% endfor %}
+                                            {% if loop.last == false %} <br/> {% endif %}
+                                        {% endif %}
+                                        {% endfor %}
+                                    {% endif %}
+                                    {% endfor %}
+                                    </div>
+                                    {% endif %}
+
+                                    <!-- Links -->
+                                    {% if act.num_links > 0 %}
+                                    <div class="tab-pane fade" id="links-ta-act-{{ act.id }}-pane" role="tabpanel" aria-labelledby="links-ta-act-{{ act.id }}" tabindex="0">
+                                        
+                                        <!-- Accordion Start [links] -->
+                                        <div class="accordion" id="accordion-act-{{ act.id }}-links">
+                                        {% for me in act.measures %}
+                                        {% if me.num_links > 0 %}
+                                            <!-- accordion item -->
+                                            <div class="accordion-item">
+                                                <!-- accordion button -->
+                                                <h2 class="accordion-header" id="heading-me-{{ me.id }}-links">
+                                                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" aria-expanded="false"
+                                                    data-bs-target="#collapse-me-{{ me.id }}-links" aria-controls="collapse-me-{{ me.id }}-links">
+                                                        {{ me.title }} {% if me.organization != "N/A" %} ({{ me.organization }}) {% endif %}
+                                                    </button>
+                                                </h2>
+
+                                                <!-- accordion content -->
+                                                <div class="accordion-collapse collapse" data-bs-parent="#accordion-act-{{ act.id }}-links"
+                                                id="collapse-me-{{ me.id }}-links" aria-labelledby="heading-me-{{ me.id }}-links">
+                                                    <div class="accordion-body">
+                                                    <!-- list the links of performance measures -->
+                                                    {% for link in me.links %}
+                                                    {% if link.title != "" %}
+                                                        <i class= "{{ me.format }}"></i>
+                                                        <a href={{ link.url }} target="_blank"> {{ link.title }} </a><br/>
+                                                    {% endif %}
+                                                    {% endfor %}
+
+                                                    <!-- list the links of sub-projects -->
+                                                    {% for sub in me.subprojects %}
+                                                    {% if sub.num_links > 0 %}
+                                                        <small>{{ sub.title }}</small><br/>
+                                                        {% for link in sub.links %}
+                                                            <i class= "{{ sub.format }}"></i>
+                                                            <a href={{ link.url }} target="_blank"> {{ link.title }} </a><br/>
+                                                        {% endfor %}
+                                                        {% if loop.last == false %} <br/> {% endif %}
+                                                    {% endif %}
+                                                    {% endfor %}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        {% endif %}
+                                        {% endfor %}                                        
+                                        </div>
+                                        <!-- Accordion End -->
+                                    </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>  
+                {% endfor %}
+                </div>
+                <!-- collapsable End-->
+            </div>
+            
+        </div>
+    </div>
+</div>
+<br>
+
+{# Import scripts #}
+<script src="https://cdn.jsdelivr.net/npm/feather-icons@4.28.0/dist/feather.min.js" integrity="sha384-uO3SXW5IuS1ZpFPKugNNWqTZRRglnUJK6UAZ/gxOX80nxEkN9NcGZTftn6RzhGWE" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.4/dist/Chart.min.js" integrity="sha384-zNy6FEbO50N+Cg5wap8IKA4M/ZnLJgzc6w2NqACZaK0u0FXfOWRRJOnQtpZun8ha" crossorigin="anonymous"></script>

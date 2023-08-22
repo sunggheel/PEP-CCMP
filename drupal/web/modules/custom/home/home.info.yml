@@ -1,0 +1,8 @@
+name: PEP Home
+description: 'Allows user to see the homepage'
+package: PEP CCMP
+
+type: module
+core_version_requirement: ^8 || ^9
+
+php: 8.1

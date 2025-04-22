@@ -167,18 +167,27 @@ class ProjectController {
 
     public function setActionStatus($action) {
         $count_completed = 0;
+        $count_ongoing = 0;
+        $count_inprogress = 0;
         $count_total = sizeof($action["measures"]);
         foreach ($action["measures"] as $m) {
             if ($m["status"] == "") {
                 $count_total--;
+            } else if ($m["status"] == "ongoing") {
+                $count_ongoing++;
+                //$action["status"] = "ongoing";
+                //break;
             } else if ($m["status"] == "inprogress") {
-                $action["status"] = "inprogress";
-                break;
+                $count_inprogress++;
+                //$action["status"] = "inprogress";
+                //break;
             } else if ($m["status"] == "complete") {
                 $count_completed++;
             }
         }
-        if (0 < $count_completed && $count_completed < $count_total) {  // if there is ONE measure in progrsss  set status -> inprogress
+        if (0 < $count_ongoing && $count_inprogress == 0 && $count_completed < $count_total) {  // if there is ONE measure in progrsss  set status -> inprogress
+            $action["status"] = "ongoing";
+        } else if (0 < $count_inprogress && $count_completed < $count_total) {  // if there is ONE measure in progrsss  set status -> inprogress
             $action["status"] = "inprogress";
         } else if ($count_completed == $count_total) {                  // if all measures are completed        set status -> complete
             $action["status"] = "complete";

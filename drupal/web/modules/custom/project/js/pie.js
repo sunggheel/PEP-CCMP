@@ -7,7 +7,7 @@
     })
 
     // A] Read Google Sheet to read goals, objectives, and actions
-    const endpoint = "https://sheets.googleapis.com/v4/spreadsheets/15wjNsshu8CIjNJFh1iWsj4qjPmXcFonEa-sI1p3NRwc/values/A1:H400?key=AIzaSyChgqkxrIRSedYuWb_UAIHfqfKDpC-daxk";
+    const endpoint = "https://sheets.googleapis.com/v4/spreadsheets/15wjNsshu8CIjNJFh1iWsj4qjPmXcFonEa-sI1p3NRwc/values/A:G?key=AIzaSyChgqkxrIRSedYuWb_UAIHfqfKDpC-daxk";
 
     // Array of rows
     let res = await fetch(endpoint);
@@ -128,6 +128,8 @@
                             }
 
                             let count_completed = 0;
+                            let count_ongoing = 0;
+                            let count_inprogress = 0;
                             let count_total = action["measures"].length;
                             for (let m of action["measures"]) {
                                 // if there is a blank... it doesn't count
@@ -135,13 +137,19 @@
                                 // if all measures are completed        set status -> complete
                                 if (m["status"] == ""){
                                     count_total--;
+                                } else if (m["status"] == "ongoing"){
+                                    count_ongoing++;
+                                    //action["status"] = "ongoing"; //break;
                                 } else if (m["status"] == "inprogress"){
-                                    action["status"] = "inprogress"; break;
+                                    count_inprogress++;
+                                    //action["status"] = "inprogress"; //break;
                                 } else if (m["status"] == "complete"){
                                     count_completed++;
                                 }
                             }
-                            if (0 < count_completed && count_completed < count_total){
+                            if (0 < count_ongoing && count_inprogress == 0 && count_completed < count_total){
+                                action["status"] = "ongoing";
+                            } else if (0 < count_inprogress && count_completed < count_total){
                                 action["status"] = "inprogress";
                             } else if (count_completed == count_total){
                                 action["status"] = "complete";
@@ -169,7 +177,8 @@
         objChart-{{ objective.id }}-action
         objChart-{{ objective.id }}-project */
     
-    let pieColors = ["#198754", "#ffc107", "#dc3545"];
+    // completed, ongoing, in-progress, unexecuted
+    let pieColors = ["#198754", "#d4edbc", "#ffc107", "#dc3545"];
 
     let usedGoalChart = false;
     for (let goal of project["goals"]) {
@@ -177,17 +186,19 @@
         let chartID = "goalChart" + goalName.replace("-", "").replace(" ", "").toLowerCase()
         if (document.getElementById(chartID) === null) continue;
 
-        let actionPieData = [0, 0, 0];
+        let actionPieData = [0, 0, 0, 0];
 
         // collect data for that goal
         for (let objective of goal["objectives"]) {
             for (let action of objective["actions"]) {
                 if (action["status"] === "complete") {
                     actionPieData[0]++;
-                } else if (action["status"] === "inprogress") {
+                } else if (action["status"] === "ongoing") {
                     actionPieData[1]++;
-                } else if (action["status"] === "unexecuted") {
+                } else if (action["status"] === "inprogress") {
                     actionPieData[2]++;
+                } else if (action["status"] === "unexecuted") {
+                    actionPieData[3]++;
                 }
             }
         }
@@ -196,7 +207,7 @@
         const goalChart = new Chart(ctx, {
             type: 'pie',
             data: {
-                labels: ["completed", "in-progress", "unexecuted"],
+                labels: ["Completed", "Ongoing", "In-Progress", "Unexecuted"],
                 datasets: [{
                     data: actionPieData,
                     lineTension: 0,
@@ -211,7 +222,7 @@
             }
         });
 
-        let measurePieData = [0, 0, 0];
+        let measurePieData = [0, 0, 0, 0];
 
         // collect measure data for that goal
         for (let objective of goal["objectives"]) {
@@ -219,10 +230,12 @@
                 for (let measure of action["measures"]) {
                     if (measure["status"] === "complete") {
                         measurePieData[0]++;
-                    } else if (measure["status"] === "inprogress") {
+                    } else if (measure["status"] === "ongoing") {
                         measurePieData[1]++;
-                    } else if (measure["status"] === "unexecuted") {
+                    } else if (measure["status"] === "inprogress") {
                         measurePieData[2]++;
+                    } else if (measure["status"] === "unexecuted") {
+                        measurePieData[3]++;
                     }
                 }
             }
@@ -233,7 +246,7 @@
         const goalChartB = new Chart(ctxB, {
             type: 'pie',
             data: {
-                labels: ["completed", "in-progress", "unexecuted"],
+                labels: ["Completed", "Ongoing", "In-Progress", "Unexecuted"],
                 datasets: [{
                     data: measurePieData,
                     lineTension: 0,
@@ -258,16 +271,18 @@
                 let chartID = "objChart" + objective["id"];
                 if (document.getElementById(chartID) === null) continue;
 
-                let actionPieData = [0, 0, 0];
+                let actionPieData = [0, 0, 0, 0];
     
                 // collect data for that goal
                 for (let action of objective["actions"]) {
                     if (action["status"] === "complete") {
                         actionPieData[0]++;
-                    } else if (action["status"] === "inprogress") {
+                    } else if (action["status"] === "ongoing") {
                         actionPieData[1]++;
-                    } else if (action["status"] === "unexecuted") {
+                    } else if (action["status"] === "inprogress") {
                         actionPieData[2]++;
+                    } else if (action["status"] === "unexecuted") {
+                        actionPieData[3]++;
                     }
                 }
                 
@@ -275,7 +290,7 @@
                 const goalChart = new Chart(ctx, {
                     type: 'pie',
                     data: {
-                        labels: ["completed", "in-progress", "unexecuted"],
+                        labels: ["Completed", "Ongoing", "In-Progress", "Unexecuted"],
                         datasets: [{
                             data: actionPieData,
                             lineTension: 0,
@@ -290,17 +305,19 @@
                     }
                 });
         
-                let measurePieData = [0, 0, 0];
+                let measurePieData = [0, 0, 0, 0];
         
                 // collect data for that goal
                 for (let action of objective["actions"]) {
                     for (let measure of action["measures"]) {
                         if (measure["status"] === "complete") {
                             measurePieData[0]++;
-                        } else if (measure["status"] === "inprogress") {
+                        } else if (measure["status"] === "ongoing") {
                             measurePieData[1]++;
-                        } else if (measure["status"] === "unexecuted") {
+                        } else if (measure["status"] === "inprogress") {
                             measurePieData[2]++;
+                        } else if (measure["status"] === "unexecuted") {
+                            measurePieData[3]++;
                         }
                     }
                 }
@@ -310,7 +327,7 @@
                 const goalChartB = new Chart(ctxB, {
                     type: 'pie',
                     data: {
-                        labels: ["completed", "in-progress", "unexecuted"],
+                        labels: ["Completed", "Ongoing", "In-Progress", "Unexecuted"],
                         datasets: [{
                             data: measurePieData,
                             lineTension: 0,

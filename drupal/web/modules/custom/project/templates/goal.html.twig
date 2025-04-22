@@ -56,20 +56,17 @@
             </div>
             <div class="row g-2">
                 <div class="col-6 d-flex justify-content-evenly">
-                    <div>
-                        <canvas id="goalChart{{ goalTheme }}"></canvas> {# Set id as objChart-{{ objective.id }}-action #}
-                    </div>
+                    <canvas id="goalChart{{ goalTheme }}" width="100%" height="100%"></canvas> {# Set id as objChart-{{ objective.id }}-action #}
                 </div>
                 <div class="col-6 d-flex justify-content-evenly">
-                    <div>
-                        <canvas id="goalChart{{ goalTheme }}B"></canvas> {# Set id as objChart-{{ objective.id }}-project #}
-                    </div>   
+                    <canvas id="goalChart{{ goalTheme }}B" width="100%" height="100%"></canvas> {# Set id as objChart-{{ objective.id }}-project #}
                 </div>
             </div>         
             <br> 
 
             <!-- Display legend -->
             <small> <span class="tiny-dot complete"></span> Completed </small> &nbsp;
+            <small> <span class="tiny-dot ongoing"></span> Ongoing </small> &nbsp;
             <small> <span class="tiny-dot inprogress"></span> In-Progress </small> &nbsp;
             <small> <span class="tiny-dot unexecuted"></span> Unexecuted </small>  
             <br>

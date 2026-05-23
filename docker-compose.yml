@@ -33,12 +33,12 @@ services:
     volumes:
     - ./drupal:/var/www/html:cached
 ## Alternative for macOS users: Mutagen https://wodby.com/docs/stacks/drupal/local#docker-for-mac
-#    - drupal:/var/www/html
+#    - ./drupal:/var/www/html
     labels:
     - "traefik.http.routers.${PROJECT_NAME}_nginx.rule=Host(`${PROJECT_BASE_URL}`)"
 
   traefik:
-    image: traefik:v2.0
+    image: traefik:v3
     container_name: "${PROJECT_NAME}_traefik"
     command: --api.insecure=true --providers.docker
     ports:
